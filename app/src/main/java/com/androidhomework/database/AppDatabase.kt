@@ -7,7 +7,7 @@ import com.androidhomework.model.Notes
 
 @Database(
     entities = [Country::class, Notes::class],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

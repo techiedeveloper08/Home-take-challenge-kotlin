@@ -3,6 +3,7 @@ package com.androidhomework.ui.home
 import com.androidhomework.api.NetworkApi
 import com.androidhomework.database.AppDatabase
 import com.androidhomework.model.Country
+import com.androidhomework.model.Notes
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -48,9 +49,14 @@ class CountryRepoImpl(private val database: AppDatabase, private val service: Ne
     }
 
     private fun getCountriesFromDB(): Observable<List<Country>> {
-        return Observable.fromCallable {
-            database.countryDao().loadCountries()
-        }
+        val countryList = database.countryDao().loadCountries()
+        countryList.forEach { it.notes = getNotesFromDBById(it.id)  }
+        return Observable.fromCallable { countryList }
+    }
+
+    private fun getNotesFromDBById(countryId: String): Notes {
+        val notes = database.notesDao().getNotesByCountryId(countryId)
+        return notes ?: Notes(countryId, "")
     }
 
     override fun isDisposed(): Boolean {

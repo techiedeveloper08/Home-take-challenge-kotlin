@@ -48,9 +48,14 @@ class CountryDetailActivity : AppCompatActivity(), CountryDetail.Controller {
         presenter = CountryDetailPresenterImpl(model = model, controller = this@CountryDetailActivity)
 
         binding.btnSubmit.setOnClickListener {
-            notes?.notes = binding.etNote.text.toString()
-            presenter.updateNotes(notes)
-            Toast.makeText(this, "Notes Saved!", Toast.LENGTH_SHORT).show()
+            if (binding.etNote.text.toString().trim().isNotBlank()) {
+                notes?.notes = binding.etNote.text.toString()
+                presenter.updateNotes(notes)
+                Toast.makeText(this, "Notes Saved!", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Notes must not be empty!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         country?.let {

@@ -3,4 +3,8 @@
 
     <string name="errorDialogTitle">Error!!!</string>
     <string name="save_notes">Save Notes</string>
+    <string name="country_flag">Country Flag</string>
+    <string name="country_name">Country Name</string>
+    <string name="notes">Notes</string>
+    <string name="notes_">Notes: %1$s</string>
 </resources>

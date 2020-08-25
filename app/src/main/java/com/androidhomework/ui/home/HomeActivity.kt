@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity(), Home.Controller, OnCountryClickListene
     private var loadingDialog: LoadingOverlayDialogController? = null
     private var errorDialog: ErrorDialog? = null
     private var countryList: List<Country> = ArrayList()
+    private var isRefresh = false
 
     private val service: NetworkApi by inject()
 
@@ -40,6 +41,12 @@ class HomeActivity : AppCompatActivity(), Home.Controller, OnCountryClickListene
     private fun init() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            isRefresh = true
+            homePresenter.initialize()
+        }
+
         loadingDialog = LoadingOverlayDialogController(this@HomeActivity, Runnable { })
 
         countryRepo = CountryRepoImpl(database = App.instance.roomDatabase, service = service)
@@ -51,7 +58,10 @@ class HomeActivity : AppCompatActivity(), Home.Controller, OnCountryClickListene
         countryAdapter = CountryAdapter(this)
         countryAdapter.setOnCountryClickListener(this)
         binding.recyclerView.adapter = countryAdapter
+    }
 
+    override fun onResume() {
+        super.onResume()
         homePresenter.initialize()
     }
 
@@ -59,6 +69,7 @@ class HomeActivity : AppCompatActivity(), Home.Controller, OnCountryClickListene
         countryList = countriesRes
         if (countryList.isNotEmpty()) {
             countryAdapter.setCountriesData(countryList)
+            binding.swipeRefreshLayout.isRefreshing = isRefresh
             onShowLoading(false)
         } else {
             if (countryList.isEmpty() && numberOfAttempt == 1) {
@@ -77,8 +88,10 @@ class HomeActivity : AppCompatActivity(), Home.Controller, OnCountryClickListene
 
     override fun onShowLoading(showLoading: Boolean) {
         if (showLoading) {
+            isRefresh = false
             loadingDialog?.show()
         } else {
+            isRefresh = false
             loadingDialog?.dismiss()
         }
     }

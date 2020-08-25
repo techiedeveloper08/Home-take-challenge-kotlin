@@ -2,6 +2,7 @@ package com.androidhomework.model
 
 
 import android.os.Parcelable
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -31,5 +32,8 @@ data class Country(
 
     val longitude: String?,
 
-    val zoom: String?
+    val zoom: String?,
+
+    @Embedded(prefix = "notes_")
+    var notes: Notes?
 ): Parcelable

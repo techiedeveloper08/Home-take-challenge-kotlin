@@ -2,6 +2,7 @@ package com.androidhomework.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -42,6 +43,13 @@ class CountryAdapter(private val context: Context) :
         fun bind(country: Country) {
 
             countryItemBinding.countryName.text = country.name
+
+            if(!country.notes?.notes.isNullOrEmpty()) {
+                countryItemBinding.countryNotes.text = context.getString(R.string.notes_, country.notes?.notes)
+                countryItemBinding.countryNotes.visibility = View.VISIBLE
+            } else {
+                countryItemBinding.countryNotes.visibility = View.GONE
+            }
 
             Glide.with(context)
                     .load(country.flag)
